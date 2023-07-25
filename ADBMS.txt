@@ -1,0 +1,45 @@
+Basic
+
+show dbs						//show all databases
+db							//current database
+use shop						//creating a database	//switching a database
+db.createCollection("product")				//creating a collection
+show collections					//show collections
+db.product.insert({name: "ABC"})			//insert only
+db.product.insertOne({name: "ABC"})			//insert one
+db.product.insertOne({name: "ABC", age: 23})		//insert one row
+db.product.find()					//display
+db.customer.insertMany([{name: "pqr", age: 25},{name: "abc", age: 22}])		//insert many
+db.customer.update({cus_id: 10}, {$set:{cus_id: 20}})				//update
+db.getCollection("customer").drop()			//drop collection
+db.drop Database()					//drop database
+
+Comparism opertaions	/	Logical operations
+
+db.book.find({status: {$eq: "A"}})			//equal
+db.book.find({Quantity: {$lt: 20}})			//less than
+db.book.find({$and: [{status: {$eq: "A"}},{Quantity: {$gte: 30}}]})	//and operation
+db.book.find({$or: [{Quantity: {$nq: 18}},{Quantity: {$nq: 19}}]})	//or operation
+db.book.find({Item: /^J/})				//display start with J letter
+db.book.find({Item: /E$/})				//dispaly End with E letter
+
+
+db.employee.update({}, {$set: {email: 1}}, false, true)		//add new field for entire document
+db.employee.update({empId: 1}, {$set: {address: "oluvil"}})	//add new field for only one document
+db.employee.update({empId: 1}, {$unset: {address: "oluvil"}})	//remove field for only one document
+db.employee.update({}, {$unset: {email: 1}}, false, true)	//remove field from entire document
+db.employee.updateMany({}, {$unset: {email: 1}})		//another method for remove field from entire document
+
+projection
+
+db.employee.find({}, {empId: 1, empName: 1})			//display only two field
+db.employee.find({}, {_id: 0, empId: 1, empName: 1})		//to not appear objectid
+
+
+Aggregation
+
+db.order.find({size: "medium"})				//medium size
+db.order.aggregate({$match: {size: "medium"}})		//medium size
+db.order.aggregate({$match: {ISODate: {$lte: ISODate("2023-01-01"), $gte: ISODate("2021-01-01")}}})		//less than equal and greater than equal
+db.order.aggregate([{$match: {size: "medium"}}, {$group: {_id: "$name", totalQuality: {$sum: "$quantity"}}}])	//sum
+db.order.aggregate([{$match: {size: "medium"}}, {$group: {_id: "$name", totalQuality: {$sum: {$multiply: ["$quantity", "$price"]}}}}])	//sum and multiply
